@@ -57,7 +57,7 @@ dependencies {
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
     implementation "com.google.jsinterop:jsinterop-annotations:2.1.0:sources"
     implementation project(':core')
-    implementation "site.klade:simulation:0.0.1:sources"
+    implementation "site.klade:simulation:0.0.1-SNAPSHOT:sources"
 }
 
 //// We delete the (temporary) war/ folder because if any extra files get into it, problems occur.

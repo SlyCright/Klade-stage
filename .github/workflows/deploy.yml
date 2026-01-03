@@ -22,6 +22,9 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build HTML5 Client
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
         run: ./gradlew html:dist
 
       - name: Upload Build Artifacts

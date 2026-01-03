@@ -68,11 +68,11 @@ public class KladeStage extends ApplicationAdapter {
         // Draw node circle
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         if (isActive) {
-            // Active state - bright dirty yellow
-            shapeRenderer.setColor(0.8f, 0.7f, 0.1f, 1f);
+            // Active state - dirty red
+            shapeRenderer.setColor(0.8f, 0.2f, 0.2f, 1f);
         } else {
-            // Inactive state - dark dirty yellow
-            shapeRenderer.setColor(0.3f, 0.25f, 0.05f, 1f);
+            // Inactive state - dark dirty red
+            shapeRenderer.setColor(0.3f, 0.1f, 0.1f, 1f);
         }
         shapeRenderer.circle(centerX, centerY, nodeRadius);
         shapeRenderer.end();

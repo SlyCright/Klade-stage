@@ -25,7 +25,7 @@ jobs:
         env:
           GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
-        run: ./gradlew html:dist
+        run: ./gradlew html:dist --refresh-dependencies
 
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4

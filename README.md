@@ -1,6 +1,6 @@
 # Klade Stage - libGDX HTML5 Simulation Client
 
-**Version:** 2025.12.21_ver.01
+**Version:** 2026.01.04_ver.02
 
 ## Description
 The libGDX-based HTML5 rendering engine for Klade Evolutionary Simulation Game. This project contains the GWT-compiled client that renders 2D evolutionary arenas and specimen interactions, designed to be embedded within the Vaadin management interface via iframe integration.
@@ -25,16 +25,20 @@ This repository contains the **stage/** component of the three-project Klade arc
 
 Each project runs independently on different ports and can be opened as separate projects.
 
+With this:
 ## Setup for Development
 1. Open this folder as a standalone project
-2. Configure the Gradle JVM to Java 11 or higher in Project Settings
-3. Access the Gradle tool window to view available tasks under the 'html' module
+2. Configure the Gradle JVM to Java 11
+3. Use the `copyStageToMain` task (under "Klade" group) to build and copy client to main project 
+   (Check whether the path to the main project in stage/build.gradle is correct)
 
 ## Building for Production
 Generate a production-ready build by executing the 'dist' task in the 'html' module. This produces optimized JavaScript and assets in the html/build/dist directory, ready for deployment as static resources.
 
 ## Development Mode
-Run the client in development mode with live reloading by executing the 'superDev' task in the 'html' module. The client becomes available at http://localhost:8082 and automatically recompiles upon source file changes.
+1. Run `copyStageToMain` task in the Gradle tool window (under "Klade" group)
+2. This builds the HTML5 client and copies it to main project's static resources
+3. Restart the main Spring Boot application to see changes
 
 ## Integration Notes
 The Vaadin management UI in the main repository embeds this client using an iframe pointed to the static resources served from this module. Authentication context is passed via POST-based JWT token exchange.

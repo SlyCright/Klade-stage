@@ -75,3 +75,24 @@ subprojects {
 }
 
 eclipse.project.name = 'klade-stage' + '-parent'
+
+tasks.register('copyStageToMain', Copy) {
+    group = "Klade" // Create custom group for easy finding
+    description = "Build HTML5 client and copy to main project's static resources"
+
+    from "html/build/dist"
+    into "../main/src/main/resources/static/stage"
+
+    dependsOn ":html:dist"
+
+    doFirst {
+        println "🎭 Building stage client..."
+        // Ensure destination exists
+        file("../main/src/main/resources/static/stage").mkdirs()
+    }
+
+    doLast {
+        println "✅ Stage client copied to main/src/main/resources/static/stage/"
+        println "   Restart main application to see changes"
+    }
+}

@@ -78,7 +78,7 @@ public class KladeStage extends ApplicationAdapter {
         shapeRenderer.end();
         // Draw border
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.9f, 0.8f, 0.2f, 1f);
+        shapeRenderer.setColor(0.9f, 0.2f, 0.2f, 1f);
         shapeRenderer.circle(centerX, centerY, nodeRadius);
         shapeRenderer.end();
         // Draw text overlay

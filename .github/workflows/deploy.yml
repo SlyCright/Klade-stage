@@ -32,7 +32,6 @@ jobs:
         with:
           name: stage-dist-latest  # Fixed name for easy retrieval
           path: html/build/dist/
-          retention-days: 1  # Keep it short; Main will consume it quickly
 
       - name: Trigger Main Deployment
         run: |

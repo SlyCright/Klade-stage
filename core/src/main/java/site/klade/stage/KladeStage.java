@@ -83,19 +83,21 @@ public class KladeStage extends ApplicationAdapter {
         shapeRenderer.end();
         // Draw text overlay
         batch.begin();
+        String description = "The graphic represents simulation visualisation and is provided by libGDX.";
         String separator = "____";
         String headerText = "Visual run:";
         String ticksText = "Total ticks: " + clientTotalTicks;
         String changesText = "Rhyme node status changes: " + clientStateChanges;
         String statusText = "Rhyme node current status: " + (isActive ? "ACTIVE" : "INACTIVE");
         int x = 20;
-        int y = 200;
+        int y = 300;
         int spacing = 18;
-        font.draw(batch, separator, x, Gdx.graphics.getHeight() - y - 0 * spacing);
-        font.draw(batch, headerText, x, Gdx.graphics.getHeight() - y - 1 * spacing);
-        font.draw(batch, ticksText, x, Gdx.graphics.getHeight() - y - 2 * spacing);
-        font.draw(batch, changesText, x, Gdx.graphics.getHeight() - y - 3 * spacing);
-        font.draw(batch, statusText, x, Gdx.graphics.getHeight() - y - 4 * spacing);
+        font.draw(batch, description, x, Gdx.graphics.getHeight() - y - 0 * spacing);
+        font.draw(batch, separator, x, Gdx.graphics.getHeight() - y - 1 * spacing);
+        font.draw(batch, headerText, x, Gdx.graphics.getHeight() - y - 2 * spacing);
+        font.draw(batch, ticksText, x, Gdx.graphics.getHeight() - y - 3 * spacing);
+        font.draw(batch, changesText, x, Gdx.graphics.getHeight() - y - 4 * spacing);
+        font.draw(batch, statusText, x, Gdx.graphics.getHeight() - y - 5 * spacing);
         batch.end();
     }
 

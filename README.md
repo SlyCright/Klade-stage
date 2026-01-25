@@ -1,9 +1,11 @@
 # Klade Stage - libGDX HTML5 Simulation Client
 
-**Version:** 2026.01.04_ver.02
+**Version:** 2026.01.25_ver.03
 
 ## Description
 The libGDX-based HTML5 rendering engine for Klade Evolutionary Simulation Game. This project contains the GWT-compiled client that renders 2D evolutionary arenas and specimen interactions, designed to be embedded within the Vaadin management interface via iframe integration.
+
+## Live Site: [klade.site](https://klade.site/)
 
 ## Vision
 A high-performance, visually rich simulation client that brings evolutionary competition to life through fluid animations, particle effects, and dynamic arena rendering. The stage client displays the results of evolutionary algorithms in an interactive, real-time environment where players can watch their species compete and adapt.
@@ -45,7 +47,7 @@ The Vaadin management UI in the main repository embeds this client using an ifra
 
 ## Community & Support
 - **Main Repository**: https://github.com/SlyCright/Klade
-- **Funding**: https://boosty.to/klade
+- **Funding**: https://boosty.to/klade (RUS)
 - **License**: Apache 2.0
 
 ## License

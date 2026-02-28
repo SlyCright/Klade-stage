@@ -9,12 +9,15 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import site.klade.simulation.Arena;
 
-/**
- * {@link com.badlogic.gdx.ApplicationListener} implementation for Rhythm Node POC.
- */
 public class KladeStage extends ApplicationAdapter {
 
     private static final int FRAMES_PER_TICK = 2; // Adjustable speed
+
+    private static final int TEXT_X = 20;
+
+    private static final int TEXT_Y = 300;
+
+    private static final int TEXT_SPACING = 18;
 
     private SpriteBatch batch;
 
@@ -24,11 +27,11 @@ public class KladeStage extends ApplicationAdapter {
 
     private Arena arena;
 
-    private int frameCounter = 0;
+    private ArenaRenderer arenaRenderer;
 
     private long arenaTotalTicks = 0;
 
-    private ArenaRenderer arenaRenderer;
+    private int frameCounter = 0;
 
     @Override
     public void create() {
@@ -67,22 +70,19 @@ public class KladeStage extends ApplicationAdapter {
     private void draw() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
         arenaRenderer.draw(shapeRenderer);
+        drawText();
+    }
+
+    private void drawText() {
         batch.begin();
-        String description = "The graphic represents simulation visualisation and is provided by libGDX. ";
-        String separator = "____";
-        String headerText = "Visual run:";
-        String ticksText = "Total ticks: " + arenaTotalTicks;
-        String changesText = "Rhyme node status changes: -";
-        String statusText = "Rhyme node current status: " + ("ACTIVE" + "INACTIVE");
-        int x = 20;
-        int y = 300;
-        int spacing = 18;
-        font.draw(batch, description, x, Gdx.graphics.getHeight() - y - 0 * spacing);
-        font.draw(batch, separator, x, Gdx.graphics.getHeight() - y - 1 * spacing);
-        font.draw(batch, headerText, x, Gdx.graphics.getHeight() - y - 2 * spacing);
-        font.draw(batch, ticksText, x, Gdx.graphics.getHeight() - y - 3 * spacing);
-        font.draw(batch, changesText, x, Gdx.graphics.getHeight() - y - 4 * spacing);
-        font.draw(batch, statusText, x, Gdx.graphics.getHeight() - y - 5 * spacing);
+        String[] lines = {
+                "The graphic represents simulation visualisation and is provided by libGDX.",
+                "____",
+                "Visual run:",
+                "Total ticks: " + arenaTotalTicks};
+        for (int i = 0; i < lines.length; i++) {
+            font.draw(batch, lines[i], TEXT_X, Gdx.graphics.getHeight() - TEXT_Y - i * TEXT_SPACING);
+        }
         batch.end();
     }
 }

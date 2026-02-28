@@ -15,7 +15,7 @@ public class ArenaRenderer implements Renderer {
 
     public static final float ARENA_CENTER_COLOR_A = 1f;
 
-    public static final float ARENA_CENTER_RADIUS = 100f;
+    public static final float ARENA_CENTER_RADIUS = 10f;
 
     private final SpecimenRenderer specimenRenderer;
 

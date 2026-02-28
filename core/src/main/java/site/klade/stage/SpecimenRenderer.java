@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class SpecimenRenderer implements Renderer {
 
-    public final static float SPECIMEN_RADIUS = 200f;
+    public final static float SPECIMEN_RADIUS = 15f;
 
     private final Vector2 position = new Vector2(0f, 0f);
 

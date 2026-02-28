@@ -81,7 +81,8 @@ public class KladeStage extends ApplicationAdapter {
                 "Visual run:",
                 "Total ticks: " + arenaTotalTicks};
         for (int i = 0; i < lines.length; i++) {
-            font.draw(batch, lines[i], TEXT_X, Gdx.graphics.getHeight() - TEXT_Y - i * TEXT_SPACING);
+            font.draw(batch, lines[i],
+                    TEXT_X, Gdx.graphics.getHeight() - TEXT_Y - i * TEXT_SPACING);
         }
         batch.end();
     }

@@ -54,6 +54,18 @@ public class KladeStage extends ApplicationAdapter {
 
     @Override
     public void render() {
+        update();
+        draw();
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+        shapeRenderer.dispose();
+        font.dispose();
+    }
+
+    private void update() {
         // Update simulation at controlled rate
         frameCounter++;
         if (frameCounter >= FRAMES_PER_TICK) {
@@ -66,40 +78,18 @@ public class KladeStage extends ApplicationAdapter {
                 lastNodeState = dto.getIsRhymeNodeCurrentlyActive();
             }
         }
-        update();
-        // Clear screen
+    }
+
+    private void draw() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        draw();
-        // Render rhythm node visualization
-        float centerX = Gdx.graphics.getWidth() / 2f;
-        float centerY = Gdx.graphics.getHeight() / 2f;
-        float nodeRadius = 50f;
-        SimulationDto dto = simulation.getSimulationDto();
-        boolean isActive = dto.getIsRhymeNodeCurrentlyActive();
-        // Draw node circle
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        if (isActive) {
-            // Active state - dirty red
-            shapeRenderer.setColor(0.2f, 0.8f, 0.2f, 1f);
-        } else {
-            // Inactive state - dark dirty red
-            shapeRenderer.setColor(0.1f, 0.1f, 0.3f, 1f);
-        }
-        shapeRenderer.circle(centerX, centerY, nodeRadius);
-        shapeRenderer.end();
-        // Draw border
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.9f, 0.2f, 0.2f, 1f);
-        shapeRenderer.circle(centerX, centerY, nodeRadius);
-        shapeRenderer.end();
-        // Draw text overlay
+        arenaRenderer.draw(shapeRenderer);
         batch.begin();
         String description = "The graphic represents simulation visualisation and is provided by libGDX. ";
         String separator = "____";
         String headerText = "Visual run:";
         String ticksText = "Total ticks: " + clientTotalTicks;
         String changesText = "Rhyme node status changes: " + clientStateChanges;
-        String statusText = "Rhyme node current status: " + (isActive ? "ACTIVE" : "INACTIVE");
+        String statusText = "Rhyme node current status: " + ("ACTIVE" + "INACTIVE");
         int x = 20;
         int y = 300;
         int spacing = 18;
@@ -110,19 +100,5 @@ public class KladeStage extends ApplicationAdapter {
         font.draw(batch, changesText, x, Gdx.graphics.getHeight() - y - 4 * spacing);
         font.draw(batch, statusText, x, Gdx.graphics.getHeight() - y - 5 * spacing);
         batch.end();
-    }
-
-    @Override
-    public void dispose() {
-        batch.dispose();
-        shapeRenderer.dispose();
-        font.dispose();
-    }
-
-    private void update() {
-    }
-
-    private void draw() {
-        arenaRenderer.draw(shapeRenderer);
     }
 }

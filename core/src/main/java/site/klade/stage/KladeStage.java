@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import site.klade.simulation.Arena;
-import site.klade.simulation.Simulation;
-import site.klade.simulation.SimulationDto;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation for Rhythm Node POC.
@@ -23,14 +21,6 @@ public class KladeStage extends ApplicationAdapter {
     private ShapeRenderer shapeRenderer;
 
     private BitmapFont font;
-
-    private Simulation simulation;
-
-    private long clientTotalTicks = 0;
-
-    private long clientStateChanges = 0;
-
-    private boolean lastNodeState = false;
 
     private Arena arena;
 
@@ -47,7 +37,6 @@ public class KladeStage extends ApplicationAdapter {
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().setScale(1.0f);
-        simulation = new Simulation();
         arena = new Arena();
         arenaRenderer = new ArenaRenderer(arena);
     }
@@ -69,14 +58,9 @@ public class KladeStage extends ApplicationAdapter {
         // Update simulation at controlled rate
         frameCounter++;
         if (frameCounter >= FRAMES_PER_TICK) {
-            simulation.update();
+            arena.update();
             frameCounter = 0;
-            clientTotalTicks++;
-            SimulationDto dto = simulation.getSimulationDto();
-            if (dto.getIsRhymeNodeCurrentlyActive() != lastNodeState) {
-                clientStateChanges++;
-                lastNodeState = dto.getIsRhymeNodeCurrentlyActive();
-            }
+            arenaTotalTicks++;
         }
     }
 
@@ -87,8 +71,8 @@ public class KladeStage extends ApplicationAdapter {
         String description = "The graphic represents simulation visualisation and is provided by libGDX. ";
         String separator = "____";
         String headerText = "Visual run:";
-        String ticksText = "Total ticks: " + clientTotalTicks;
-        String changesText = "Rhyme node status changes: " + clientStateChanges;
+        String ticksText = "Total ticks: " + arenaTotalTicks;
+        String changesText = "Rhyme node status changes: -";
         String statusText = "Rhyme node current status: " + ("ACTIVE" + "INACTIVE");
         int x = 20;
         int y = 300;

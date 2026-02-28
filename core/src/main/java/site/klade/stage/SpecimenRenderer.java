@@ -1,5 +1,6 @@
 package site.klade.stage;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
@@ -9,12 +10,10 @@ public class SpecimenRenderer implements Renderer {
 
     private final Vector2 position = new Vector2(0f, 0f);
 
-    // public SpecimenRenderer(
-    //         // Entity specimen
-    // ) {
-    //     // var physics = specimen.getComponent(SpecimenPhysics.class);
-    //     // position = physics.getPositon();
-    // }
+    public SpecimenRenderer(Entity specimen) {
+        // var physics = specimen.getComponent(SpecimenPhysics.class);
+        // position = physics.getPositon();
+    }
 
     @Override
     public void draw(ShapeRenderer shapeRenderer) {

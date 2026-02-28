@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import site.klade.simulation.Arena;
 import site.klade.simulation.Simulation;
 import site.klade.simulation.SimulationDto;
 
@@ -25,15 +26,19 @@ public class KladeStage extends ApplicationAdapter {
 
     private Simulation simulation;
 
-    private int frameCounter = 0;
-
     private long clientTotalTicks = 0;
 
     private long clientStateChanges = 0;
 
     private boolean lastNodeState = false;
 
-    private SpecimenRenderer specimenRenderer;
+    private Arena arena;
+
+    private int frameCounter = 0;
+
+    private long arenaTotalTicks = 0;
+
+    private ArenaRenderer arenaRenderer;
 
     @Override
     public void create() {
@@ -43,7 +48,8 @@ public class KladeStage extends ApplicationAdapter {
         font.setColor(Color.WHITE);
         font.getData().setScale(1.0f);
         simulation = new Simulation();
-        specimenRenderer = new SpecimenRenderer();
+        arena = new Arena();
+        arenaRenderer = new ArenaRenderer(arena);
     }
 
     @Override
@@ -60,9 +66,10 @@ public class KladeStage extends ApplicationAdapter {
                 lastNodeState = dto.getIsRhymeNodeCurrentlyActive();
             }
         }
+        update();
         // Clear screen
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        specimenRenderer.draw(shapeRenderer);
+        draw();
         // Render rhythm node visualization
         float centerX = Gdx.graphics.getWidth() / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
@@ -110,5 +117,12 @@ public class KladeStage extends ApplicationAdapter {
         batch.dispose();
         shapeRenderer.dispose();
         font.dispose();
+    }
+
+    private void update() {
+    }
+
+    private void draw() {
+        arenaRenderer.draw(shapeRenderer);
     }
 }

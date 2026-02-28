@@ -15,6 +15,8 @@ import site.klade.simulation.SimulationDto;
  */
 public class KladeStage extends ApplicationAdapter {
 
+    private static final int FRAMES_PER_TICK = 2; // Adjustable speed
+
     private SpriteBatch batch;
 
     private ShapeRenderer shapeRenderer;
@@ -25,13 +27,13 @@ public class KladeStage extends ApplicationAdapter {
 
     private int frameCounter = 0;
 
-    private static final int FRAMES_PER_TICK = 2; // Adjustable speed
-
     private long clientTotalTicks = 0;
 
     private long clientStateChanges = 0;
 
     private boolean lastNodeState = false;
+
+    private SpecimenRenderer specimenRenderer;
 
     @Override
     public void create() {
@@ -41,6 +43,7 @@ public class KladeStage extends ApplicationAdapter {
         font.setColor(Color.WHITE);
         font.getData().setScale(1.0f);
         simulation = new Simulation();
+        specimenRenderer = new SpecimenRenderer();
     }
 
     @Override
@@ -59,6 +62,7 @@ public class KladeStage extends ApplicationAdapter {
         }
         // Clear screen
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        specimenRenderer.draw(shapeRenderer);
         // Render rhythm node visualization
         float centerX = Gdx.graphics.getWidth() / 2f;
         float centerY = Gdx.graphics.getHeight() / 2f;
@@ -69,10 +73,10 @@ public class KladeStage extends ApplicationAdapter {
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         if (isActive) {
             // Active state - dirty red
-            shapeRenderer.setColor(0.8f, 0.2f, 0.2f, 1f);
+            shapeRenderer.setColor(0.2f, 0.8f, 0.2f, 1f);
         } else {
             // Inactive state - dark dirty red
-            shapeRenderer.setColor(0.3f, 0.1f, 0.1f, 1f);
+            shapeRenderer.setColor(0.1f, 0.1f, 0.3f, 1f);
         }
         shapeRenderer.circle(centerX, centerY, nodeRadius);
         shapeRenderer.end();
@@ -83,7 +87,7 @@ public class KladeStage extends ApplicationAdapter {
         shapeRenderer.end();
         // Draw text overlay
         batch.begin();
-        String description = "The graphic represents simulation visualisation and is provided by libGDX.";
+        String description = "The graphic represents simulation visualisation and is provided by libGDX. ";
         String separator = "____";
         String headerText = "Visual run:";
         String ticksText = "Total ticks: " + clientTotalTicks;

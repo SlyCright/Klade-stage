@@ -3,16 +3,17 @@ package site.klade.stage;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
+import site.klade.simulation.SpecimenPhysics;
 
 public class SpecimenRenderer implements Renderer {
 
     public final static float SPECIMEN_RADIUS = 15f;
 
-    private final Vector2 position = new Vector2(0f, 0f);
+    private final Vector2 position;
 
     public SpecimenRenderer(Entity specimen) {
-        // var physics = specimen.getComponent(SpecimenPhysics.class);
-        // position = physics.getPositon();
+        var physics = specimen.getComponent(SpecimenPhysics.class);
+        position = physics.getPositon();
     }
 
     @Override

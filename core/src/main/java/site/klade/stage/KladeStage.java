@@ -19,6 +19,14 @@ public class KladeStage extends ApplicationAdapter {
 
     private static final int TEXT_SPACING = 18;
 
+    private static final String TOTAL_TICKS_PREFIX = "Total ticks: ";
+
+    private final String[] textLines = {
+            "The graphic represents simulation visualisation and is provided by libGDX.",
+            "____",
+            "Visual run:",
+            TOTAL_TICKS_PREFIX + "0"};
+
     private SpriteBatch batch;
 
     private ShapeRenderer shapeRenderer;
@@ -64,6 +72,7 @@ public class KladeStage extends ApplicationAdapter {
             arena.update();
             frameCounter = 0;
             arenaTotalTicks++;
+            textLines[3] = TOTAL_TICKS_PREFIX + arenaTotalTicks;
         }
     }
 
@@ -73,15 +82,11 @@ public class KladeStage extends ApplicationAdapter {
         drawText();
     }
 
+    // TODO: should be TextRenderer for consistency of the abstraction level of the KladeStage class
     private void drawText() {
         batch.begin();
-        String[] lines = {
-                "The graphic represents simulation visualisation and is provided by libGDX.",
-                "____",
-                "Visual run:",
-                "Total ticks: " + arenaTotalTicks};
-        for (int i = 0; i < lines.length; i++) {
-            font.draw(batch, lines[i],
+        for (int i = 0; i < textLines.length; i++) {
+            font.draw(batch, textLines[i],
                     TEXT_X, Gdx.graphics.getHeight() - TEXT_Y - i * TEXT_SPACING);
         }
         batch.end();

@@ -1,8 +1,6 @@
 package site.klade.stage;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector2;
 import site.klade.simulation.Arena;
 
 public class ArenaRenderer implements Renderer {
@@ -19,12 +17,8 @@ public class ArenaRenderer implements Renderer {
 
     private final SpecimenRenderer specimenRenderer;
 
-    private final Vector2 centerOffset;
-
     public ArenaRenderer(Arena arena) {
         specimenRenderer = new SpecimenRenderer(arena.getSpecimen());
-        var graphics = Gdx.graphics;
-        centerOffset = new Vector2(graphics.getWidth() / 2f, graphics.getHeight() / 2f);
     }
 
     @Override
@@ -35,7 +29,7 @@ public class ArenaRenderer implements Renderer {
                 ARENA_CENTER_COLOR_G,
                 ARENA_CENTER_COLOR_B,
                 ARENA_CENTER_COLOR_A);
-        shapeRenderer.circle(centerOffset.x, centerOffset.y, ARENA_CENTER_RADIUS);
+        shapeRenderer.circle(0f, 0f, ARENA_CENTER_RADIUS);
         shapeRenderer.end();
         specimenRenderer.draw(shapeRenderer);
     }

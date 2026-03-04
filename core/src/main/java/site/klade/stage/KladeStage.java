@@ -3,10 +3,13 @@ package site.klade.stage;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import site.klade.simulation.Arena;
 
 public class KladeStage extends ApplicationAdapter {
@@ -26,6 +29,10 @@ public class KladeStage extends ApplicationAdapter {
             "____",
             "Visual run:",
             TOTAL_TICKS_PREFIX + "0"};
+
+    private OrthographicCamera camera = new OrthographicCamera();
+
+    private Viewport viewport = new FitViewport(800, 600, camera);
 
     private SpriteBatch batch;
 
@@ -50,6 +57,12 @@ public class KladeStage extends ApplicationAdapter {
         font.getData().setScale(1.0f);
         arena = new Arena();
         arenaRenderer = new ArenaRenderer(arena);
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height);  // handles screen resizing
+        camera.position.set(0, 0, 0);    // world centre at screen centre
     }
 
     @Override
@@ -78,6 +91,7 @@ public class KladeStage extends ApplicationAdapter {
 
     private void draw() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        shapeRenderer.setProjectionMatrix(camera.combined);
         arenaRenderer.draw(shapeRenderer);
         drawText();
     }

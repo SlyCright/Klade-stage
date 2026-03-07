@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import site.klade.simulation.Arena;
+import site.klade.simulation.Genome;
 
 public class KladeStage extends ApplicationAdapter {
 
@@ -55,7 +56,7 @@ public class KladeStage extends ApplicationAdapter {
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().setScale(1.0f);
-        arena = new Arena();
+        arena = new Arena(new Genome());
         arenaRenderer = new ArenaRenderer(arena);
     }
 

@@ -3,7 +3,7 @@ package site.klade.stage;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import site.klade.simulation.SpecimenPhysics;
+import site.klade.simulation.Kinematics;
 
 public class SpecimenRenderer implements Renderer {
 
@@ -12,20 +12,20 @@ public class SpecimenRenderer implements Renderer {
     private final Vector2 position;
 
     public SpecimenRenderer(Entity specimen) {
-        var physics = specimen.getComponent(SpecimenPhysics.class);
-        position = physics.getPositon();
+        var kinematics = specimen.getComponent(Kinematics.class);
+        position = kinematics.getPosition();
     }
 
     @Override
     public void draw(ShapeRenderer shapeRenderer) {
         // Draw circle
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        shapeRenderer.setColor(0.8f, 0.2f, 0.2f, 1f);
+        shapeRenderer.setColor(0.6f, 0.2f, 0.2f, 0.75f);
         shapeRenderer.circle(position.x, position.y, SPECIMEN_RADIUS);
         shapeRenderer.end();
         // Draw border
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(0.9f, 0.2f, 0.2f, 1f);
+        shapeRenderer.setColor(0.8f, 0.2f, 0.2f, 1f);
         shapeRenderer.circle(position.x, position.y, SPECIMEN_RADIUS);
         shapeRenderer.end();
     }

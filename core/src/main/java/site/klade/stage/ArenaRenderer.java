@@ -5,13 +5,13 @@ import site.klade.simulation.Arena;
 
 public class ArenaRenderer implements Renderer {
 
-    public static final float ARENA_CENTER_COLOR_R = 0.5f;
+    public static final float ARENA_CENTER_COLOR_R = 0.1f;
 
     public static final float ARENA_CENTER_COLOR_G = 0.1f;
 
-    public static final float ARENA_CENTER_COLOR_B = 0.1f;
+    public static final float ARENA_CENTER_COLOR_B = 0.6f;
 
-    public static final float ARENA_CENTER_COLOR_A = 1f;
+    public static final float ARENA_CENTER_COLOR_A = 0.75f;
 
     public static final float ARENA_CENTER_RADIUS = 10f;
 

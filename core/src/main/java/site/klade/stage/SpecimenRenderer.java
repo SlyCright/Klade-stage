@@ -7,7 +7,7 @@ import site.klade.simulation.Kinematics;
 
 public class SpecimenRenderer implements Renderer {
 
-    public final static float SPECIMEN_RADIUS = 15f;
+    public final static float SPECIMEN_RADIUS = 9f;
 
     private final Vector2 position;
 

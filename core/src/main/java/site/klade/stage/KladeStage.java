@@ -2,11 +2,15 @@ package site.klade.stage;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.net.HttpRequestBuilder;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -31,9 +35,9 @@ public class KladeStage extends ApplicationAdapter {
             "Visual run:",
             TOTAL_TICKS_PREFIX + "0"};
 
-    private OrthographicCamera camera = new OrthographicCamera();
+    private final OrthographicCamera camera = new OrthographicCamera();
 
-    private Viewport viewport = new FitViewport(800, 600, camera);
+    private final Viewport viewport = new FitViewport(800, 600, camera);
 
     private SpriteBatch batch;
 
@@ -49,6 +53,8 @@ public class KladeStage extends ApplicationAdapter {
 
     private int frameCounter = 0;
 
+    private boolean isFetchingGenome = false;
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -58,6 +64,7 @@ public class KladeStage extends ApplicationAdapter {
         font.getData().setScale(1.0f);
         arena = new Arena(new Genome());
         arenaRenderer = new ArenaRenderer(arena);
+        fetchBestGenomeAndResetArena();
     }
 
     @Override
@@ -79,6 +86,60 @@ public class KladeStage extends ApplicationAdapter {
         font.dispose();
     }
 
+    private void fetchBestGenomeAndResetArena() {
+        if (isFetchingGenome) return; // avoid overlapping requests
+        isFetchingGenome = true;
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+        Net.HttpRequest httpRequest = requestBuilder.newRequest()
+                .method(Net.HttpMethods.GET)
+                .url("/api/best-genome")
+                .build();
+        Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
+            @Override
+            public void handleHttpResponse(Net.HttpResponse httpResponse) {
+                String response = httpResponse.getResultAsString();
+                try {
+                    JsonReader jsonReader = new JsonReader();
+                    JsonValue root = jsonReader.parse(response);
+                    // Check if the response is not null (the server may return null if no genome is evaluated yet)
+                    if (root == null) {
+                        Gdx.app.log("KladeStage", "No genome data received, keeping current arena.");
+                        return;
+                    }
+                    float startX = root.getFloat("startX");
+                    float startY = root.getFloat("startY");
+                    float impulseX = root.getFloat("impulseX");
+                    float impulseY = root.getFloat("impulseY");
+                    // Create a new Genome using the constructor we added
+                    Genome newGenome = new Genome(startX, startY, impulseX, impulseY);
+                    // Schedule replacement on the rendering thread
+                    Gdx.app.postRunnable(() -> {
+                        arena = new Arena(newGenome);
+                        arenaRenderer = new ArenaRenderer(arena);
+                        arenaTotalTicks = 0;
+                        frameCounter = 0;
+                    });
+                } catch (Exception e) {
+                    Gdx.app.log("KladeStage", "Failed to parse genome JSON", e);
+                    // Fallback: keep current arena
+                } finally {
+                    isFetchingGenome = false;
+                }
+            }
+
+            @Override
+            public void failed(Throwable t) {
+                Gdx.app.log("KladeStage", "HTTP request failed", t);
+                isFetchingGenome = false;
+            }
+
+            @Override
+            public void cancelled() {
+                isFetchingGenome = false;
+            }
+        });
+    }
+
     private void update() {
         // Update simulation at controlled rate
         frameCounter++;
@@ -87,6 +148,7 @@ public class KladeStage extends ApplicationAdapter {
             frameCounter = 0;
             arenaTotalTicks++;
             textLines[3] = TOTAL_TICKS_PREFIX + arenaTotalTicks;
+            if (arena.isEvaluationComplete()) fetchBestGenomeAndResetArena();
         }
     }
 

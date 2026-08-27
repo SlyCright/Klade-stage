@@ -8,10 +8,12 @@ import java.util.List;
 
 public class ArenaRenderer implements Renderer {
 
+    private final ArenaBackgroundRenderer arenaBackgroundRenderer;
     private final ArenaCenterRenderer arenaCenterRenderer;
     private final List<SpecimenRenderer> specimenRenderers;
 
     public ArenaRenderer(Arena arena) {
+        arenaBackgroundRenderer = new ArenaBackgroundRenderer();
         arenaCenterRenderer = new ArenaCenterRenderer();
         specimenRenderers = new ArrayList<>();
         for (var specimen : arena.getSpecimens()) {
@@ -21,7 +23,11 @@ public class ArenaRenderer implements Renderer {
 
     @Override
     public void draw(ShapeRenderer shapeRenderer) {
+        // Draw background first (behind everything)
+        arenaBackgroundRenderer.draw(shapeRenderer);
+        // Draw arena center
         arenaCenterRenderer.draw(shapeRenderer);
+        // Draw specimens on top
         for (SpecimenRenderer renderer : specimenRenderers) {
             renderer.draw(shapeRenderer);
         }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Net;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -64,6 +65,11 @@ public class KladeStage extends ApplicationAdapter {
         font = new BitmapFont();
         font.setColor(Color.WHITE);
         font.getData().setScale(1.0f);
+
+        // Enable anti-aliasing through OpenGL blending
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         arena = new Arena(new Genome());
         arenaRenderer = new ArenaRenderer(arena);
         fetchBestGenomeAndResetArena();
@@ -186,7 +192,8 @@ public class KladeStage extends ApplicationAdapter {
     }
 
     private void draw() {
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+        // Clear with transparent black since gradient background handles the visuals
+        ScreenUtils.clear(0f, 0f, 0f, 1f);
         shapeRenderer.setProjectionMatrix(camera.combined);
         arenaRenderer.draw(shapeRenderer);
         drawText();

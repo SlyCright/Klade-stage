@@ -17,6 +17,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import site.klade.simulation.Arena;
 import site.klade.simulation.Genome;
 
+import java.util.ArrayList;
+
 public class KladeStage extends ApplicationAdapter {
 
     private static final int FRAMES_PER_TICK = 2; // Adjustable speed
@@ -87,57 +89,88 @@ public class KladeStage extends ApplicationAdapter {
     }
 
     private void fetchBestGenomeAndResetArena() {
-        if (isFetchingGenome) return; // avoid overlapping requests
+        if (isFetchingGenome) return;
         isFetchingGenome = true;
-        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
-        Net.HttpRequest httpRequest = requestBuilder.newRequest()
-                .method(Net.HttpMethods.GET)
-                .url("/api/best-genome")
-                .build();
+
+        Net.HttpRequest httpRequest = createGenomeRequest();
         Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
             @Override
             public void handleHttpResponse(Net.HttpResponse httpResponse) {
                 String response = httpResponse.getResultAsString();
                 try {
-                    JsonReader jsonReader = new JsonReader();
-                    JsonValue root = jsonReader.parse(response);
-                    // Check if the response is not null (the server may return null if no genome is evaluated yet)
-                    if (root == null) {
-                        Gdx.app.log("KladeStage", "No genome data received, keeping current arena.");
-                        return;
+                    ArrayList<Genome> newGenomes = parseGenomesFromJson(response);
+                    if (newGenomes != null) {
+                        resetArenaWithGenomes(newGenomes);
                     }
-                    float startX = root.getFloat("startX");
-                    float startY = root.getFloat("startY");
-                    float impulseX = root.getFloat("impulseX");
-                    float impulseY = root.getFloat("impulseY");
-                    // Create a new Genome using the constructor we added
-                    Genome newGenome = new Genome(startX, startY, impulseX, impulseY);
-                    // Schedule replacement on the rendering thread
-                    Gdx.app.postRunnable(() -> {
-                        arena = new Arena(newGenome);
-                        arenaRenderer = new ArenaRenderer(arena);
-                        arenaTotalTicks = 0;
-                        frameCounter = 0;
-                    });
                 } catch (Exception e) {
                     Gdx.app.log("KladeStage", "Failed to parse genome JSON", e);
-                    // Fallback: keep current arena
                 } finally {
-                    isFetchingGenome = false;
+                    setFetchingGenomeFalse();
                 }
             }
 
             @Override
             public void failed(Throwable t) {
                 Gdx.app.log("KladeStage", "HTTP request failed", t);
-                isFetchingGenome = false;
+                setFetchingGenomeFalse();
             }
 
             @Override
             public void cancelled() {
-                isFetchingGenome = false;
+                setFetchingGenomeFalse();
             }
         });
+    }
+
+    private Net.HttpRequest createGenomeRequest() {
+        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
+        return requestBuilder.newRequest()
+                .method(Net.HttpMethods.GET)
+                .url("/api/best-genome")
+                .build();
+    }
+
+    private ArrayList<Genome> parseGenomesFromJson(String response) {
+        JsonReader jsonReader = new JsonReader();
+        JsonValue root = jsonReader.parse(response);
+
+        if (root == null) {
+            Gdx.app.log("KladeStage", "No genome data received, keeping current arena.");
+            return null;
+        }
+
+        JsonValue genomesArray = root.get("genomes");
+        if (genomesArray == null || !genomesArray.isArray() || genomesArray.size == 0) {
+            Gdx.app.log("KladeStage", "No genomes array in response, keeping current arena.");
+            return null;
+        }
+
+        ArrayList<Genome> genomes = new ArrayList<Genome>();
+        for (JsonValue genomeValue : genomesArray) {
+            float startX = genomeValue.getFloat("startX");
+            float startY = genomeValue.getFloat("startY");
+            float impulseX = genomeValue.getFloat("impulseX");
+            float impulseY = genomeValue.getFloat("impulseY");
+            genomes.add(new Genome(startX, startY, impulseX, impulseY));
+        }
+
+        return genomes;
+    }
+
+    private void resetArenaWithGenomes(final ArrayList<Genome> genomes) {
+        Gdx.app.postRunnable(new Runnable() {
+            @Override
+            public void run() {
+                arena = new Arena(genomes);
+                arenaRenderer = new ArenaRenderer(arena);
+                arenaTotalTicks = 0;
+                frameCounter = 0;
+            }
+        });
+    }
+
+    private void setFetchingGenomeFalse() {
+        isFetchingGenome = false;
     }
 
     private void update() {

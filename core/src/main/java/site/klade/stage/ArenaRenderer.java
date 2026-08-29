@@ -1,6 +1,5 @@
 package site.klade.stage;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import site.klade.simulation.Arena;
 
 import java.util.ArrayList;
@@ -22,14 +21,22 @@ public class ArenaRenderer implements Renderer {
     }
 
     @Override
-    public void draw(ShapeRenderer shapeRenderer) {
+    public void draw() {
         // Draw background first (behind everything)
-        arenaBackgroundRenderer.draw(shapeRenderer);
+        arenaBackgroundRenderer.draw();
         // Draw arena center
-        arenaCenterRenderer.draw(shapeRenderer);
+        arenaCenterRenderer.draw();
         // Draw specimens on top
         for (SpecimenRenderer renderer : specimenRenderers) {
-            renderer.draw(shapeRenderer);
+            renderer.draw();
+        }
+    }
+
+    public void dispose() {
+        arenaBackgroundRenderer.dispose();
+        arenaCenterRenderer.dispose();
+        for (SpecimenRenderer renderer : specimenRenderers) {
+            renderer.dispose();
         }
     }
 }

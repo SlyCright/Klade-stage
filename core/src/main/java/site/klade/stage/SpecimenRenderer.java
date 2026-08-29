@@ -12,25 +12,30 @@ import java.util.Random;
 
 public class SpecimenRenderer implements Renderer {
 
-    // TODO: should be taken from the simulation parameters since it determines how body physics are calculated
+    private final ShapeRenderer shapeRenderer;
+
     public final static float SPECIMEN_RADIUS = 9f;
-    public static final float BORDER_WIDTH = 4f;
+    // TODO: should be taken from the simulation parameters since it determines how body physics are calculated
+
+    public static final float BORDER_WIDTH = 2f;
+    public static final Color BODER_COLOR = new Color(0.9f, 0.9f, 1f, 1f);
 
     private final Vector2 position;
     private final Color bodyColor;
     private final Color borderColor;
 
     public SpecimenRenderer(Entity specimen) {
+        this.shapeRenderer = new ShapeRenderer();
         Kinematics kinematics = specimen.getComponent(Kinematics.class);
         position = kinematics.getPosition();
 
         Random random = new Random();
         bodyColor = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 0.75f);
-        borderColor = new Color(random.nextFloat(), random.nextFloat(), random.nextFloat(), 1f);
+        borderColor = BODER_COLOR;
     }
 
     @Override
-    public void draw(ShapeRenderer shapeRenderer) {
+    public void draw() {
         // Ensure blending is enabled for smooth edges
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -49,5 +54,9 @@ public class SpecimenRenderer implements Renderer {
             shapeRenderer.circle(position.x, position.y, bodyRadius + offset, 32);
         }
         shapeRenderer.end();
+    }
+
+    public void dispose() {
+        shapeRenderer.dispose();
     }
 }

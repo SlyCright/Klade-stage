@@ -8,8 +8,8 @@ public class ArenaCenterRenderer implements Renderer {
 
     private final ShapeRenderer shapeRenderer;
 
-    public ArenaCenterRenderer() {
-        this.shapeRenderer = new ShapeRenderer();
+    public ArenaCenterRenderer(ShapeRenderer shapeRenderer) {
+        this.shapeRenderer = shapeRenderer;
     }
 
     public static final float ARENA_CENTER_COLOR_R = 0.9f;
@@ -34,7 +34,4 @@ public class ArenaCenterRenderer implements Renderer {
         shapeRenderer.end();
     }
 
-    public void dispose() {
-        shapeRenderer.dispose();
-    }
 }

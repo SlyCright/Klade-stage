@@ -12,8 +12,8 @@ public class ArenaBackgroundRenderer implements Renderer {
 
     private final ShapeRenderer shapeRenderer;
 
-    public ArenaBackgroundRenderer() {
-        this.shapeRenderer = new ShapeRenderer();
+    public ArenaBackgroundRenderer(ShapeRenderer shapeRenderer) {
+        this.shapeRenderer = shapeRenderer;
     }
 
     // Gradient colors - center to edges
@@ -60,8 +60,5 @@ public class ArenaBackgroundRenderer implements Renderer {
         shapeRenderer.end();
     }
 
-    public void dispose() {
-        shapeRenderer.dispose();
-    }
 
 }

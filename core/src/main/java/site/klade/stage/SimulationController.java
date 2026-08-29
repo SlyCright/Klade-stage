@@ -1,6 +1,7 @@
 package site.klade.stage;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import site.klade.simulation.Arena;
 import site.klade.simulation.Genome;
 
@@ -15,9 +16,9 @@ public class SimulationController {
     private long arenaTotalTicks = 0;
     private int frameCounter = 0;
 
-    public SimulationController() {
+    public SimulationController(ShapeRenderer shapeRenderer) {
         arena = new Arena(new Genome());
-        arenaRenderer = new ArenaRenderer(arena);
+        arenaRenderer = new ArenaRenderer(shapeRenderer, arena);
     }
 
     public void update() {
@@ -29,12 +30,12 @@ public class SimulationController {
         }
     }
 
-    public void resetArena(final ArrayList<Genome> genomes) {
+    public void resetArena(final ArrayList<Genome> genomes, final ShapeRenderer shapeRenderer) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
                 arena = new Arena(genomes);
-                arenaRenderer = new ArenaRenderer(arena);
+                arenaRenderer = new ArenaRenderer(shapeRenderer, arena);
                 arenaTotalTicks = 0;
                 frameCounter = 0;
             }

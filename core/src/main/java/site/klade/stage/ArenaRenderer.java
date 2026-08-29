@@ -1,5 +1,6 @@
 package site.klade.stage;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import site.klade.simulation.Arena;
 
 import java.util.ArrayList;
@@ -11,12 +12,12 @@ public class ArenaRenderer implements Renderer {
     private final ArenaCenterRenderer arenaCenterRenderer;
     private final List<SpecimenRenderer> specimenRenderers;
 
-    public ArenaRenderer(Arena arena) {
-        arenaBackgroundRenderer = new ArenaBackgroundRenderer();
-        arenaCenterRenderer = new ArenaCenterRenderer();
+    public ArenaRenderer(ShapeRenderer shapeRenderer, Arena arena) {
+        arenaBackgroundRenderer = new ArenaBackgroundRenderer(shapeRenderer);
+        arenaCenterRenderer = new ArenaCenterRenderer(shapeRenderer);
         specimenRenderers = new ArrayList<>();
         for (var specimen : arena.getSpecimens()) {
-            specimenRenderers.add(new SpecimenRenderer(specimen));
+            specimenRenderers.add(new SpecimenRenderer(shapeRenderer, specimen));
         }
     }
 
@@ -33,10 +34,6 @@ public class ArenaRenderer implements Renderer {
     }
 
     public void dispose() {
-        arenaBackgroundRenderer.dispose();
-        arenaCenterRenderer.dispose();
-        for (SpecimenRenderer renderer : specimenRenderers) {
-            renderer.dispose();
-        }
+        // ShapeRenderer is owned by KladeStage, not disposed here
     }
 }

@@ -2,6 +2,7 @@ package site.klade.stage;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
@@ -20,7 +21,8 @@ public class TextRenderer implements Renderer {
         this.batch = new SpriteBatch();
         this.font = new BitmapFont();
         this.font.setColor(Color.WHITE);
-        this.font.getData().setScale(1.0f, 2.0f);
+        this.font.getData().setScale(1.25f);
+        this.font.getRegion().getTexture().setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         this.textLines = new String[]{
                 "The graphic represents simulation visualisation and is provided by libGDX.",
                 "____",

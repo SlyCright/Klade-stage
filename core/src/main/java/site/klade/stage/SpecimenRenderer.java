@@ -24,8 +24,8 @@ public class SpecimenRenderer implements Renderer {
     private final Color bodyColor;
     private final Color borderColor;
 
-    public SpecimenRenderer(Entity specimen) {
-        this.shapeRenderer = new ShapeRenderer();
+    public SpecimenRenderer(ShapeRenderer shapeRenderer, Entity specimen) {
+        this.shapeRenderer = shapeRenderer;
         Kinematics kinematics = specimen.getComponent(Kinematics.class);
         position = kinematics.getPosition();
 
@@ -56,7 +56,4 @@ public class SpecimenRenderer implements Renderer {
         shapeRenderer.end();
     }
 
-    public void dispose() {
-        shapeRenderer.dispose();
-    }
 }

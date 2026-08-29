@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -16,6 +17,8 @@ public class KladeStage extends ApplicationAdapter {
     private final OrthographicCamera camera = new OrthographicCamera();
 
     private final Viewport viewport = new FitViewport(800, 600, camera);
+
+    private ShapeRenderer shapeRenderer;
 
     private SimulationController simulationController;
 
@@ -31,7 +34,8 @@ public class KladeStage extends ApplicationAdapter {
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
-        simulationController = new SimulationController();
+        shapeRenderer = new ShapeRenderer();
+        simulationController = new SimulationController(shapeRenderer);
         genomeFetcher = new GenomeFetcher();
         textRenderer = new TextRenderer();
         fetchBestGenomeAndResetArena();
@@ -41,6 +45,7 @@ public class KladeStage extends ApplicationAdapter {
     public void resize(int width, int height) {
         viewport.update(width, height);  // handles screen resizing
         camera.position.set(0, 0, 0);    // world centre at screen centre
+        shapeRenderer.setProjectionMatrix(camera.combined);
     }
 
     @Override
@@ -71,7 +76,7 @@ public class KladeStage extends ApplicationAdapter {
         genomeFetcher.fetchBestGenome(new GenomeFetchCallback() {
             @Override
             public void onSuccess(ArrayList<Genome> genomes) {
-                simulationController.resetArena(genomes);
+                simulationController.resetArena(genomes, shapeRenderer);
                 isFetchingGenome = false;
             }
 
@@ -86,5 +91,6 @@ public class KladeStage extends ApplicationAdapter {
     public void dispose() {
         simulationController.dispose();
         textRenderer.dispose();
+        shapeRenderer.dispose();
     }
 }

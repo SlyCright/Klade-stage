@@ -12,13 +12,11 @@ public class SimulationController {
     private static final int FRAMES_PER_TICK = 2;
 
     private Arena arena;
-    private ArenaRenderer arenaRenderer;
     private long arenaTotalTicks = 0;
     private int frameCounter = 0;
 
-    public SimulationController(ShapeRenderer shapeRenderer) {
+    public SimulationController() {
         arena = new Arena(new Genome());
-        arenaRenderer = new ArenaRenderer(shapeRenderer, arena);
     }
 
     public void update() {
@@ -30,12 +28,11 @@ public class SimulationController {
         }
     }
 
-    public void resetArena(final ArrayList<Genome> genomes, final ShapeRenderer shapeRenderer) {
+    public void resetArena(final ArrayList<Genome> genomes) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
                 arena = new Arena(genomes);
-                arenaRenderer = new ArenaRenderer(shapeRenderer, arena);
                 arenaTotalTicks = 0;
                 frameCounter = 0;
             }
@@ -50,11 +47,7 @@ public class SimulationController {
         return arenaTotalTicks;
     }
 
-    public ArenaRenderer getArenaRenderer() {
-        return arenaRenderer;
-    }
-
-    public void dispose() {
-        arenaRenderer.dispose();
+    public Arena getArena() {
+        return arena;
     }
 }

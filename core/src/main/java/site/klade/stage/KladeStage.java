@@ -22,6 +22,8 @@ public class KladeStage extends ApplicationAdapter {
 
     private SimulationController simulationController;
 
+    private ArenaRenderer arenaRenderer;
+
     private GenomeFetcher genomeFetcher;
 
     private TextRenderer textRenderer;
@@ -30,12 +32,13 @@ public class KladeStage extends ApplicationAdapter {
 
     @Override
     public void create() {
-        // Enable anti-aliasing through OpenGL blending
+        // Enable antialiasing through OpenGL blending
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
         shapeRenderer = new ShapeRenderer();
-        simulationController = new SimulationController(shapeRenderer);
+        simulationController = new SimulationController();
+        arenaRenderer = new ArenaRenderer(shapeRenderer, simulationController.getArena());
         genomeFetcher = new GenomeFetcher();
         textRenderer = new TextRenderer();
         fetchBestGenomeAndResetArena();
@@ -44,7 +47,7 @@ public class KladeStage extends ApplicationAdapter {
     @Override
     public void resize(int width, int height) {
         viewport.update(width, height);  // handles screen resizing
-        camera.position.set(0, 0, 0);    // world centre at screen centre
+        camera.position.set(0, 0, 0);    // world center at screen center
         shapeRenderer.setProjectionMatrix(camera.combined);
     }
 
@@ -65,7 +68,7 @@ public class KladeStage extends ApplicationAdapter {
     private void draw() {
         // Clear with transparent black since gradient background handles the visuals
         ScreenUtils.clear(0f, 0f, 0f, 1f);
-        simulationController.getArenaRenderer().draw();
+        arenaRenderer.draw();
         textRenderer.draw();
     }
 
@@ -76,7 +79,8 @@ public class KladeStage extends ApplicationAdapter {
         genomeFetcher.fetchBestGenome(new GenomeFetchCallback() {
             @Override
             public void onSuccess(ArrayList<Genome> genomes) {
-                simulationController.resetArena(genomes, shapeRenderer);
+                simulationController.resetArena(genomes);
+                arenaRenderer = new ArenaRenderer(shapeRenderer, simulationController.getArena());
                 isFetchingGenome = false;
             }
 
@@ -89,7 +93,7 @@ public class KladeStage extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        simulationController.dispose();
+        arenaRenderer.dispose();
         textRenderer.dispose();
         shapeRenderer.dispose();
     }

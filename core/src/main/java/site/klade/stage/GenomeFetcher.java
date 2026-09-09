@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class GenomeFetcher {
 
-    public void fetchBestGenome(GenomeFetchCallback callback) {
+    public void fetchBestGenome(final GenomeFetchCallback callback) {
         Net.HttpRequest httpRequest = createGenomeRequest();
         Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
             @Override

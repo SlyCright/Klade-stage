@@ -1,0 +1,30 @@
+{
+  "Nodes": {
+    "borderWidth": 2.0,
+    "border": { "h": 240, "s": 0.1, "v": 1.0, "a": 1.0, "description": "light blue" },
+    "stem": { "h": 0, "s": 0.0, "v": 0.7, "a": 0.75, "description": "medium gray" },
+    "friction": { "h": 0, "s": 0.0, "v": 0.5, "a": 0.75, "description": "dark gray" },
+    "rhythm": { "h": 48, "s": 0.625, "v": 0.8, "a": 0.75, "description": "dirty yellow" },
+    "neuron": { "h": 160, "s": 0.57, "v": 0.7, "a": 0.75, "description": "teal green" }
+  },
+  "ArenaCenter": {
+    "center": { "h": 0, "s": 0.89, "v": 0.9, "a": 0.8, "description": "bright red" }
+  },
+  "ArenaBackground": {
+    "center": { "h": 225, "s": 0.43, "v": 0.35, "a": 1.0, "description": "dark blue-gray" },
+    "edge": { "h": 0, "s": 0.0, "v": 0.0, "a": 1.0, "description": "black" },
+    "gradient": {
+      "radius": 400.0,
+      "steps": 200,
+      "circleSegments": 64
+    }
+  },
+  "Text": {
+    "text": { "h": 0, "s": 0.0, "v": 1.0, "a": 1.0, "description": "white" },
+    "layout": {
+      "x": 20,
+      "y": 300,
+      "spacing": 18
+    }
+  }
+}

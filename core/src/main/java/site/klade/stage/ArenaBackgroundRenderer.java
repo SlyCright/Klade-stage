@@ -11,21 +11,26 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 public class ArenaBackgroundRenderer implements Renderer {
 
     private final ShapeRenderer shapeRenderer;
+    private final Color centerColor;
+    private final Color edgeColor;
+    // Gradient configuration - loaded from JSON
+    // Arena radius
+    private final float gradientRadius;
+    // Performance tuning constants - loaded from JSON
+    // Number of concentric circles (reduce to 50-80 for performance)
+    private final int gradientSteps;
+    // Segments per circle (reduce for smaller circles)
+    private final int circleSegments;
 
     public ArenaBackgroundRenderer(ShapeRenderer shapeRenderer) {
         this.shapeRenderer = shapeRenderer;
+        ConfigManager config = new ConfigManager();
+        this.centerColor = config.getColor("ArenaBackground", "center");
+        this.edgeColor = config.getColor("ArenaBackground", "edge");
+        this.gradientRadius = config.getFloat("ArenaBackground", "gradient", "radius");
+        this.gradientSteps = (int) config.getFloat("ArenaBackground", "gradient", "steps");
+        this.circleSegments = (int) config.getFloat("ArenaBackground", "gradient", "circleSegments");
     }
-
-    // Gradient colors - center to edges
-    private static final Color CENTER_COLOR = new Color(0.2f, 0.25f, 0.35f, 1f);
-    private static final Color EDGE_COLOR = new Color(0.0f, 0.0f, 0.0f, 1f);
-
-    // Gradient configuration
-    private static final float GRADIENT_RADIUS = 400f; // Arena radius
-
-    // Performance tuning constants
-    private static final int GRADIENT_STEPS = 200; // Number of concentric circles (reduce to 50-80 for performance)
-    private static final int CIRCLE_SEGMENTS = 64; // Segments per circle (reduce for smaller circles)
 
     // TODO: Possible performance optimizations for later implementation:
     // TODO: Cache gradient as texture (FrameBuffer) to reduce 200 draw calls to 1 per frame
@@ -45,20 +50,23 @@ public class ArenaBackgroundRenderer implements Renderer {
         // Reuse Color object to avoid GC pressure
         Color color = new Color();
 
-        for (int i = GRADIENT_STEPS; i >= 0; i--) {
-            float t = (float) i / GRADIENT_STEPS; // 0.0 to 1.0
-            float radius = t * GRADIENT_RADIUS;
+        for (int i = gradientSteps; i >= 0; i--) {
+            float t = (float) i / gradientSteps; // 0.0 to 1.0
+            float radius = t * gradientRadius;
 
             // Interpolate between center and edge colors (reuse color object)
-            color.set(CENTER_COLOR).lerp(EDGE_COLOR, t);
+            color.set(centerColor).lerp(edgeColor, t);
             shapeRenderer.setColor(color);
 
             // Draw circle at center (0, 0)
-            shapeRenderer.circle(0f, 0f, radius, CIRCLE_SEGMENTS);
+            shapeRenderer.circle(0f, 0f, radius, circleSegments);
         }
 
         shapeRenderer.end();
     }
 
+    public void dispose() {
+        // Placeholder for future resource disposal (e.g., cached gradient texture)
+    }
 
 }

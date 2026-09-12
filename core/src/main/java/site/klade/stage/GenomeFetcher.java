@@ -5,7 +5,10 @@ import com.badlogic.gdx.Net;
 import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import site.klade.simulation.Gene;
 import site.klade.simulation.Genome;
+import site.klade.simulation.MetaGenes;
+import site.klade.simulation.Morphogen;
 
 import java.util.ArrayList;
 
@@ -68,13 +71,29 @@ public class GenomeFetcher {
 
         ArrayList<Genome> genomes = new ArrayList<Genome>();
         for (JsonValue genomeValue : genomesArray) {
-            float startX = genomeValue.getFloat("startX");
-            float startY = genomeValue.getFloat("startY");
-            float impulseX = genomeValue.getFloat("impulseX");
-            float impulseY = genomeValue.getFloat("impulseY");
-            genomes.add(new Genome(startX, startY, impulseX, impulseY));
+            genomes.add(parseGenome(genomeValue));
         }
 
         return genomes;
+    }
+
+    /**
+     * Parses one genome entry of the /api/best-genome response:
+     * { "initialAngle": float, "fitness": float, "speciesIndex": int, "genomeDsl": string|null }.
+     * Only initialAngle is consumed for rendering; morphogens and genes are left empty.
+     */
+    private Genome parseGenome(JsonValue genomeValue) {
+        MetaGenes metaGenes = new MetaGenes();
+        metaGenes.setInitialAngle(genomeValue.getFloat("initialAngle", 0.0f));
+
+        Genome genome = new Genome(metaGenes, new ArrayList<Morphogen>(), new ArrayList<Gene>());
+        genome.setAccumulatedFitness(genomeValue.getFloat("fitness", 0.0f));
+
+        String genomeDsl = genomeValue.getString("genomeDsl", null);
+        if (genomeDsl != null && !genomeDsl.isEmpty()) {
+            Gdx.app.log("GenomeFetcher", "genomeDsl received but stage cannot parse DSL yet; using initialAngle only.");
+        }
+
+        return genome;
     }
 }

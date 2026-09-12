@@ -1,8 +1,6 @@
 package site.klade.stage;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Net;
-import com.badlogic.gdx.net.HttpRequestBuilder;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import site.klade.simulation.Gene;
@@ -12,16 +10,16 @@ import site.klade.simulation.Morphogen;
 
 import java.util.ArrayList;
 
-public class GenomeFetcher {
+public class GenomeFetcher extends ApiFetcher {
+
+    private static final String BEST_GENOME_URL = "/api/best-genome";
 
     public void fetchBestGenome(final GenomeFetchCallback callback) {
-        Net.HttpRequest httpRequest = createGenomeRequest();
-        Gdx.net.sendHttpRequest(httpRequest, new Net.HttpResponseListener() {
+        fetch(BEST_GENOME_URL, new HttpResponseCallback() {
             @Override
-            public void handleHttpResponse(Net.HttpResponse httpResponse) {
-                String response = httpResponse.getResultAsString();
+            public void onSuccess(String body) {
                 try {
-                    ArrayList<Genome> newGenomes = parseGenomesFromJson(response);
+                    ArrayList<Genome> newGenomes = parseGenomesFromJson(body);
                     if (newGenomes != null) {
                         callback.onSuccess(newGenomes);
                     } else {
@@ -34,24 +32,11 @@ public class GenomeFetcher {
             }
 
             @Override
-            public void failed(Throwable t) {
-                Gdx.app.log("GenomeFetcher", "HTTP request failed", t);
-                callback.onFailure(t);
-            }
-
-            @Override
-            public void cancelled() {
-                callback.onFailure(new Exception("Request cancelled"));
+            public void onFailure(Throwable error) {
+                Gdx.app.log("GenomeFetcher", "HTTP request failed", error);
+                callback.onFailure(error);
             }
         });
-    }
-
-    private Net.HttpRequest createGenomeRequest() {
-        HttpRequestBuilder requestBuilder = new HttpRequestBuilder();
-        return requestBuilder.newRequest()
-                .method(Net.HttpMethods.GET)
-                .url("/api/best-genome")
-                .build();
     }
 
     private ArrayList<Genome> parseGenomesFromJson(String response) {

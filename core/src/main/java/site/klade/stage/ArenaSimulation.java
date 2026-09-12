@@ -1,13 +1,13 @@
 package site.klade.stage;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import site.klade.simulation.Arena;
+import site.klade.simulation.ArenaSettings;
 import site.klade.simulation.Genome;
 
 import java.util.ArrayList;
 
-public class SimulationController {
+public class ArenaSimulation {
 
     private static final int FRAMES_PER_TICK = 2;
 
@@ -15,11 +15,15 @@ public class SimulationController {
     private long arenaTotalTicks = 0;
     private int frameCounter = 0;
 
-    public SimulationController() {
-        arena = new Arena(new Genome());
+    public ArenaSimulation() {
+        // No arena until settings are fetched from Main; defaults live only in
+        // Main's SimulationProperties and are never replicated here.
     }
 
     public void update() {
+        if (arena == null) {
+            return;
+        }
         frameCounter++;
         if (frameCounter >= FRAMES_PER_TICK) {
             arena.update();
@@ -28,11 +32,11 @@ public class SimulationController {
         }
     }
 
-    public void resetArena(final ArrayList<Genome> genomes) {
+    public void resetArena(final ArrayList<Genome> genomes, final ArenaSettings settings) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
-                arena = new Arena(genomes);
+                arena = new Arena(genomes, settings);
                 arenaTotalTicks = 0;
                 frameCounter = 0;
             }
@@ -40,7 +44,7 @@ public class SimulationController {
     }
 
     public boolean isEvaluationComplete() {
-        return arena.isEvaluationComplete();
+        return arena != null && arena.isDone();
     }
 
     public long getTotalTicks() {

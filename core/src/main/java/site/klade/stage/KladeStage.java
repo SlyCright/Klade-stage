@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import site.klade.simulation.Arena;
 import site.klade.simulation.ArenaSettings;
 import site.klade.simulation.Genome;
 
@@ -135,8 +136,10 @@ public class KladeStage extends ApplicationAdapter {
 
     private void completeFetch() {
         if (pendingGenomes != null && pendingSettings != null) {
-            arenaSimulation.resetArena(pendingGenomes, pendingSettings);
-            arenaRenderer = new ArenaRenderer(shapeRenderer, arenaSimulation.getArena());
+            // resetArena returns the arena synchronously; bind the renderer to that exact instance
+            // (getArena() would still return the stale/null arena until the posted runnable runs).
+            Arena newArena = arenaSimulation.resetArena(pendingGenomes, pendingSettings);
+            arenaRenderer = new ArenaRenderer(shapeRenderer, newArena);
             pendingGenomes = null;
             pendingSettings = null;
             isFetchingGenome = false;

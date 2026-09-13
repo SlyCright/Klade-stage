@@ -10,7 +10,7 @@ public class ConfigManager {
     private final JsonValue root;
 
     public ConfigManager() {
-        this.root = new JsonReader().parse(Gdx.files.internal("arena-skin.json"));
+        this.root = new JsonReader().parse(Gdx.files.classpath("arena-skin.json"));
     }
 
     private Color parseHSVColor(JsonValue hsv) {

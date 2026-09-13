@@ -28,7 +28,7 @@
     <!-- The value is a path, separated by forward slashes, where the root is your html project's resources root. -->
     <!-- You can include individual files like this, and access them with Gdx.files.classpath("path/to/file.png") : -->
     <!-- This is also a feature of libGDX, so these lines go after the above "inherits" that brings in libGDX. -->
-    <!-- <extend-configuration-property name="gdx.files.classpath" value="path/to/file.png" /> -->
+    <extend-configuration-property name="gdx.files.classpath" value="arena-skin.json" />
 
     <!-- You usually won't need to make changes to the rest of this. -->
     <set-configuration-property name="gdx.assetpath" value="../assets"/>

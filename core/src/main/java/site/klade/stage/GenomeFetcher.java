@@ -42,23 +42,19 @@ public class GenomeFetcher extends ApiFetcher {
     private ArrayList<Genome> parseGenomesFromJson(String response) {
         JsonReader jsonReader = new JsonReader();
         JsonValue root = jsonReader.parse(response);
-
         if (root == null) {
             Gdx.app.log("GenomeFetcher", "No genome data received, keeping current arena.");
             return null;
         }
-
         JsonValue genomesArray = root.get("genomes");
         if (genomesArray == null || !genomesArray.isArray() || genomesArray.size == 0) {
             Gdx.app.log("GenomeFetcher", "No genomes array in response, keeping current arena.");
             return null;
         }
-
         ArrayList<Genome> genomes = new ArrayList<Genome>();
         for (JsonValue genomeValue : genomesArray) {
             genomes.add(parseGenome(genomeValue));
         }
-
         return genomes;
     }
 
@@ -68,19 +64,17 @@ public class GenomeFetcher extends ApiFetcher {
      * Only initialAngle is consumed for rendering; morphogens and genes are left empty.
      */
     private Genome parseGenome(JsonValue genomeValue) {
-        MetaGenes metaGenes = new MetaGenes();
-        metaGenes.setInitialAngle(genomeValue.getFloat("initialAngle", 0.0f));
-
+        MetaGenes metaGenes = MetaGenes.createWithInitialAngle(
+            genomeValue.getFloat("initialAngle", 0.0f));
         Genome genome = new Genome(metaGenes, new ArrayList<Morphogen>(), new ArrayList<Gene>());
         genome.setAccumulatedFitness(genomeValue.getFloat("fitness", 0.0f));
-
         // Note: the stage will never parse the genome DSL. The DSL text is kept
         // here purely for users to explore by hand, should that ever be of interest.
         String genomeDsl = genomeValue.getString("genomeDsl", null);
         if (genomeDsl != null && !genomeDsl.isEmpty()) {
             Gdx.app.log("GenomeFetcher", genomeDsl);
         }
-
         return genome;
     }
+
 }

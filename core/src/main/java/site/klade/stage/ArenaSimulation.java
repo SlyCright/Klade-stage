@@ -21,9 +21,7 @@ public class ArenaSimulation {
     }
 
     public void update() {
-        if (arena == null) {
-            return;
-        }
+        if (arena == null) return;
         frameCounter++;
         if (frameCounter >= FRAMES_PER_TICK) {
             arena.update();

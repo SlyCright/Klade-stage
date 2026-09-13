@@ -74,9 +74,11 @@ public class GenomeFetcher extends ApiFetcher {
         Genome genome = new Genome(metaGenes, new ArrayList<Morphogen>(), new ArrayList<Gene>());
         genome.setAccumulatedFitness(genomeValue.getFloat("fitness", 0.0f));
 
+        // Note: the stage will never parse the genome DSL. The DSL text is kept
+        // here purely for users to explore by hand, should that ever be of interest.
         String genomeDsl = genomeValue.getString("genomeDsl", null);
         if (genomeDsl != null && !genomeDsl.isEmpty()) {
-            Gdx.app.log("GenomeFetcher", "genomeDsl received but stage cannot parse DSL yet; using initialAngle only.");
+            Gdx.app.log("GenomeFetcher", genomeDsl);
         }
 
         return genome;

@@ -2,6 +2,7 @@ package site.klade.stage;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -29,47 +30,13 @@ public class KladeStage extends ApplicationAdapter {
 
     private ArenaSettingsFetcher arenaSettingsFetcher;
 
-    /* TODO(UI MVP): Build the app's UI on the scene2d toolkit (this fork ships it).
-     *
-     * Goal / architecture
-     *  - Introduce ONE com.badlogic.gdx.scenes.scene2d.Stage as the single UI root
-     *    (screen-space viewport + OrthographicCamera + its own SpriteBatch). All future
-     *    interactive UI lives in this scene graph as Actor/Group/ui-widgets.
-     *  - Keep the GAME/WORLD rendering on the existing path (ArenaRenderer + ShapeRenderer,
-     *    immediate mode, world coordinates). UI is a separate layer: drawn on top, in
-     *    screen coordinates, by stage.draw().
-     *  - Wire input via Gdx.input.setInputProcessor(stage), or a
-     *    com.badlogic.gdx.InputMultiplexer so the UI stage and any future game-camera
-     *    input can coexist (UI consuming what it needs, passing the rest through).
-     *
-     * Per-frame wiring (in KladeStage):
-     *  - render(): after world rendering, call uiStage.act() then uiStage.draw() (last).
-     *  - dispose(): uiStage.dispose() (clears root + disposes its batch). Everything is
-     *    single-threaded + reentrant.
-     *
-     * scene2d classes to use (com.badlogic.gdx.scenes.scene2d):
-     *  - Stage, Group, Actor (root = stage.getRoot())
-     *  - ui: Label, Table (layout + built-in Debug), Button, TextButton, ImageButton,
-     *    ButtonGroup, Window, Dialog, ScrollPane, SelectBox, tooltips
-     *  - utils: ClickListener, ChangeListener, DragListener, FocusListener, ActorGestureListener
-     *  - input.GestureDetector for pointer gestures
-     *
-     * MVP (smallest thing that proves the base end-to-end):
-     *  1. Create the Stage (screen-space ScalingViewport; share app camera or give it its own).
-     *  2. Register it in an InputMultiplexer via Gdx.input.setInputProcessor(...).
-     *  3. Migrate TextRenderer's lines onto the Stage as a ui.Table of ui.Label
-     *     (replace the manual g2d.BitmapFont/SpriteBatch here -- the Stage owns batch+camera).
-     *  4. Add ONE Button (e.g. "Restart") with a ClickListener that calls
-     *     fetchGenomesAndSettings(), proving Stage + input + click + widget in one step.
-     *     This button is the seed for all later controls (pause, skip, settings, menus...).
-     *
-     * Styling: drive colors/layout/fonts through ConfigManager + arena-skin.json
-     * (existing pattern) and/or a scene2d ui Style (LabelStyle/ButtonStyle...) built there.
-     *
-     * Do NOT hand-roll UI as overlay renderers -- use scene2d; it supports HTML5/GWT
-     * (touch focus is "Public only for GWT", gdx_backends_gwt is inherited).
+    /**
+     * UI layer: ONE scene2d Stage as the single UI root (screen-space viewport,
+     * own camera + batch). Drawn on top of the game/world layer in screen
+     * coordinates; owns the info text and the "Restart" seed button. Registered
+     * in an InputMultiplexer so future game-camera input can coexist.
      */
-    private TextRenderer textRenderer; // This renderer isn't encapsulated in ArenaRenderer because it's future UI
+    private UiStage uiStage;
 
     private boolean isFetchingGenome = false;
 
@@ -87,7 +54,14 @@ public class KladeStage extends ApplicationAdapter {
         arenaSimulation = new ArenaSimulation();
         genomeFetcher = new GenomeFetcher();
         arenaSettingsFetcher = new ArenaSettingsFetcher();
-        textRenderer = new TextRenderer();
+        uiStage = new UiStage(new ConfigManager(), new UiStage.RestartAction() {
+            @Override
+            public void onRestart() {
+                fetchGenomesAndSettings();
+            }
+        });
+        // UI consumes what it needs; future game-camera input can be appended to the multiplexer.
+        Gdx.input.setInputProcessor(new InputMultiplexer(uiStage));
         fetchGenomesAndSettings();
     }
 
@@ -96,17 +70,21 @@ public class KladeStage extends ApplicationAdapter {
         viewport.update(width, height);  // handles screen resizing
         camera.position.set(0, 0, 0);    // world center at screen center
         shapeRenderer.setProjectionMatrix(camera.combined);
+        uiStage.getViewport().update(width, height);  // UI stage is screen-space
     }
 
     @Override
     public void render() {
         update();
         draw();
+        // UI last, on top, in screen coordinates.
+        uiStage.act();
+        uiStage.draw();
     }
 
     private void update() {
         arenaSimulation.update();
-        textRenderer.updateTicks(arenaSimulation.getTotalTicks());
+        uiStage.updateTicks(arenaSimulation.getTotalTicks());
         if (arenaSimulation.isEvaluationComplete()) {
             fetchGenomesAndSettings();
         }
@@ -118,7 +96,6 @@ public class KladeStage extends ApplicationAdapter {
         if (arenaRenderer != null) {
             arenaRenderer.draw();
         }
-        textRenderer.draw();
     }
 
     private void fetchGenomesAndSettings() {
@@ -178,7 +155,7 @@ public class KladeStage extends ApplicationAdapter {
         if (arenaRenderer != null) {
             arenaRenderer.dispose();
         }
-        textRenderer.dispose();
+        uiStage.dispose();
         shapeRenderer.dispose();
     }
 }

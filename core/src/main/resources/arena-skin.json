@@ -21,10 +21,20 @@
   },
   "Text": {
     "text": { "h": 0, "s": 0.0, "v": 1.0, "a": 1.0, "description": "white" },
+    "fontScale": 1.25,
     "layout": {
       "x": 20,
       "y": 300,
       "spacing": 18
+    }
+  },
+  "Ui": {
+    "buttonText": { "h": 0, "s": 0.0, "v": 1.0, "a": 1.0, "description": "white" },
+    "buttonBackground": { "h": 210, "s": 0.45, "v": 0.55, "a": 1.0, "description": "blue" },
+    "buttonBackgroundPressed": { "h": 210, "s": 0.55, "v": 0.35, "a": 1.0, "description": "dark blue" },
+    "button": {
+      "padX": 16,
+      "padY": 8
     }
   }
 }

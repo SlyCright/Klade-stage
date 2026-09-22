@@ -81,18 +81,26 @@ tasks.register('copyStageToMain', Copy) {
     description = "Build HTML5 client and copy to main project's static resources"
 
     from "html/build/dist"
-    into "../main/src/main/resources/static/stage"
+    into "../Klade/src/main/resources/static/stage"
 
     dependsOn ":html:dist"
 
     doFirst {
         println "🎭 Building stage client..."
-        // Ensure destination exists
-        file("../main/src/main/resources/static/stage").mkdirs()
+        def mainPath = "../Klade/src/main/resources/static/stage"
+        def destDir = file(mainPath)
+        if (!destDir.parentFile.parentFile.parentFile.exists()) {
+            throw new GradleException(
+                "Main project not found at expected path: ${file('../Klade').absolutePath}\n" +
+                "Ensure the main project folder is named 'Klade' and is a sibling to this project.\n" +
+                "If you need a different folder name, set the klade.main.path property in gradle.properties"
+            )
+        }
+        destDir.mkdirs()
     }
 
     doLast {
-        println "✅ Stage client copied to main/src/main/resources/static/stage/"
+        println "✅ Stage client copied to ../Klade/src/main/resources/static/stage/"
         println "   Restart main application to see changes"
     }
 }

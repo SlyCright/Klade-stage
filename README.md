@@ -29,17 +29,19 @@ Each project runs independently on different ports and can be opened as separate
 
 With this:
 ## Setup for Development
-1. Open this folder as a standalone project
-2. Configure the Gradle JVM to Java 11
-3. Use the `copyStageToMain` task (under "Klade" group) to build and copy client to main project 
-   (Check whether the path to the main project in stage/build.gradle is correct)
+1. Clone all three Klade repositories as sibling folders in the same directory
+2. Open this folder as a standalone project
+3. Configure the Gradle JVM to Java 11
+4. Use the `copyStageToMain` task (under "Klade" group) to build and copy client to main project
+   - Expects main project folder to be named "Klade" (GitHub default)
+   - If using a different folder name, set `klade.main.path` in gradle.properties
 
 ## Building for Production
 Generate a production-ready build by executing the 'dist' task in the 'html' module. This produces optimized JavaScript and assets in the html/build/dist directory, ready for deployment as static resources.
 
 ## Development Mode
 1. Run `copyStageToMain` task in the Gradle tool window (under "Klade" group)
-2. This builds the HTML5 client and copies it to main project's static resources
+2. This builds the HTML5 client and copies it to the main project's static resources at `../Klade/src/main/resources/static/stage/`
 3. Restart the main Spring Boot application to see changes
 
 ## Integration Notes

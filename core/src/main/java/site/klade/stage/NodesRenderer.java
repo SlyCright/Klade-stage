@@ -7,9 +7,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import site.klade.simulation.Arena;
+import site.klade.simulation.ElementType;
 import site.klade.simulation.components.Kinematics;
 import site.klade.simulation.components.Node;
-import site.klade.simulation.components.NodeType;
 
 public class NodesRenderer implements Renderer {
 
@@ -40,7 +40,7 @@ public class NodesRenderer implements Renderer {
             Node node = entity.getComponent(Node.class);
             Kinematics kinematics = entity.getComponent(Kinematics.class);
 
-            Color bodyColor = getColorForNodeType(node.nodeType);
+            Color bodyColor = getColorForElementType(node.elementType);
 
             // Draw body circle with reduced radius to accommodate border within NODE_RADIUS
             float borderWidth = configManager.getFloat("Nodes", "borderWidth");
@@ -60,18 +60,12 @@ public class NodesRenderer implements Renderer {
         }
     }
 
-    private Color getColorForNodeType(NodeType nodeType) {
-        switch (nodeType) {
-            case STEM:
-                return configManager.getColor("Nodes", "stem");
-            case FRICTION:
-                return configManager.getColor("Nodes", "friction");
-            case RHYTHM:
-                return configManager.getColor("Nodes", "rhythm");
-            case NEURON:
-                return configManager.getColor("Nodes", "neuron");
-            default:
-                return Color.WHITE;
+    private Color getColorForElementType(ElementType elementType) {
+        switch (elementType) {
+            case STEM_NODE: return configManager.getColor("Nodes", "stem");
+            case FRICTION_NODE: return configManager.getColor("Nodes", "friction");
+            case RHYTHM_NODE: return configManager.getColor("Nodes", "rhythm");
+            default: return Color.WHITE;
         }
     }
 

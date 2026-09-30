@@ -3,10 +3,10 @@ package site.klade.stage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
-import site.klade.simulation.Gene;
 import site.klade.simulation.Genome;
 import site.klade.simulation.MetaGenes;
 import site.klade.simulation.Morphogen;
+import site.klade.simulation.gene.Gene;
 
 import java.util.ArrayList;
 

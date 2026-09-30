@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import site.klade.simulation.Arena;
-import site.klade.simulation.ElementType;
+import site.klade.simulation.gene.ElementType;
 import site.klade.simulation.components.Kinematics;
 import site.klade.simulation.components.Node;
 
